@@ -18,6 +18,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
@@ -58,6 +59,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_13"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="order_policy">manual</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -89,6 +91,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_14"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="order_policy">manual</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
@@ -119,6 +122,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
 
@@ -168,6 +172,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="section_id" ref="sales_team.crm_case_section_1"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
@@ -208,6 +213,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_18"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="section_id" ref="sales_team.crm_case_section_1"/>
         </record>
 
@@ -227,6 +233,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_20"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="order_policy">manual</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="date_confirm" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -279,6 +286,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="order_policy">manual</field>
             <field name="section_id" ref="sales_team.crm_case_section_1"/>
         </record>
