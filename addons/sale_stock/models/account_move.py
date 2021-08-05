@@ -88,15 +88,16 @@ class AccountMove(models.Model):
                 qties_per_lot[ml.lot_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
         lot_values = []
         for lot_id, qty in qties_per_lot.items():
-            if float_is_zero(qty, precision_rounding=lot_id.product_id.uom_id.rounding):
+            lot_id_sudo = lot_id.sudo()
+            if float_is_zero(qty, precision_rounding=lot_id_sudo.product_id.uom_id.rounding):
                 continue
             lot_values.append({
-                'product_name': lot_id.product_id.display_name,
+                'product_name': lot_id_sudo.product_id.display_name,
                 'quantity': qty,
-                'uom_name': lot_id.product_uom_id.name,
-                'lot_name': lot_id.name,
+                'uom_name': lot_id_sudo.product_uom_id.name,
+                'lot_name': lot_id_sudo.name,
                 # The lot id is needed by localizations to inherit the method and add custom fields on the invoice's report.
-                'lot_id': lot_id.id
+                'lot_id': lot_id_sudo.id
             })
         return lot_values
 
