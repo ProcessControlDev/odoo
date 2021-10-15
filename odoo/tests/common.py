@@ -6,6 +6,7 @@ helpers and classes to write tests.
 """
 import base64
 import collections
+import contextlib
 import difflib
 import functools
 import importlib
@@ -32,11 +33,11 @@ from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, date
 from itertools import zip_longest as izip_longest
-from unittest.mock import patch
+from unittest.mock import Mock, MagicMock, patch
 from xmlrpc import client as xmlrpclib
 
 import requests
-import werkzeug.urls
+import werkzeug
 import werkzeug.urls
 from decorator import decorator
 from lxml import etree, html
@@ -50,7 +51,7 @@ from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging
-from odoo.tools.misc import find_in_path
+from odoo.tools.misc import DotDict, find_in_path
 from odoo.tools.safe_eval import safe_eval
 
 try:
@@ -2732,3 +2733,63 @@ class TagsSelector(object):
             return True
 
         return False
+
+
+
+def werkzeugRaiseNotFound(*args, **kwargs):
+    raise werkzeug.exceptions.NotFound()
+
+
+@contextlib.contextmanager
+def MockRequest(
+        env, *, routing=True, multilang=True,
+        context=None,
+        cookies=None, country_code=None, website=None, sale_order_id=None,
+        website_sale_current_pl=None,
+):
+    router = MagicMock()
+    match = router.return_value.bind.return_value.match
+    if routing:
+        match.return_value[0].routing = {
+            'type': 'http',
+            'website': True,
+            'multilang': multilang
+        }
+    else:
+        match.side_effect = werkzeugRaiseNotFound
+
+    if context is None:
+        context = {}
+    lang_code = context.get('lang', env.context.get('lang', 'en_US'))
+    context.setdefault('lang', lang_code)
+
+    request = Mock(
+        context=context,
+        db=None,
+        endpoint=match.return_value[0] if routing else None,
+        env=env,
+        httprequest=Mock(
+            host='localhost',
+            path='/hello/',
+            app=odoo.http.root,
+            environ={'REMOTE_ADDR': '127.0.0.1'},
+            cookies=cookies or {},
+            referrer='',
+        ),
+        lang=env['res.lang']._lang_get(lang_code),
+        redirect=env['ir.http']._redirect,
+        session=DotDict(
+            geoip={'country_code': country_code},
+            debug=False,
+            sale_order_id=sale_order_id,
+            website_sale_current_pl=website_sale_current_pl,
+        ),
+        website=website
+    )
+
+    with contextlib.ExitStack() as s:
+        odoo.http._request_stack.push(request)
+        s.callback(odoo.http._request_stack.pop)
+        s.enter_context(patch('odoo.http.root.get_db_router', router))
+
+        yield request
